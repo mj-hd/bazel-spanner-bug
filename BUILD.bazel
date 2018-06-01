@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+gazelle(
+    name = "gazelle",
+    command = "fix",
+    external = "vendored",
+    prefix = "github.com/mjhd-devlion/repro",
+)
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importpath = "github.com/mjhd-devlion/repro",
+    visibility = ["//visibility:private"],
+    deps = ["//vendor/cloud.google.com/go/spanner:go_default_library"],
+)
+
+go_binary(
+    name = "repro",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
